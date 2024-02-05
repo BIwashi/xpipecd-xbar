@@ -1,0 +1,195 @@
+# @see https://golangci-lint.run/usage/linters/
+linters-settings:
+  stylecheck:
+    # https://staticcheck.io/docs/configuration/options/#initialisms
+    initialisms: [ "ACL", "API", "ASCII", "CPU", "CSS", "DNS", "EOF", "GUID", "HTML", "HTTP", "HTTPS", "ID", "IP", "JSON", "QPS", "RAM", "RPC", "SLA", "SMTP", "SQL", "SSH", "TCP", "TLS", "TTL", "UDP", "UI", "GID", "UID", "UUID", "URI", "URL", "UTF8", "VM", "XML", "XMPP", "XSRF", "XSS", "SIP", "RTP", "AMQP", "DB", "TS" ]
+  errcheck:
+    # report about not checking of errors in type assetions: `a := b.(MyStruct)`;
+    # default is false: such cases aren't reported by default.
+    check-type-assertions: true
+    # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`;
+    # default is false: such cases aren't reported by default.
+    check-blank: true
+    exclude-functions:
+      - encoding/json.Marshal
+      - encoding/json.MarshalIndent
+  govet:
+    # report about shadowed variables
+    check-shadowing: false
+    # settings per analyzer
+    settings:
+      printf: # analyzer name, run `go tool vet help` to see all analyzers
+        funcs: # run `go tool vet help printf` to see available settings for `printf` analyzer
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Infof
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Warnf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Errorf
+          - (github.com/golangci/golangci-lint/pkg/logutils.Log).Fatalf
+  gocyclo:
+    # minimal code complexity to report, 30 by default (but we recommend 10-20)
+    min-complexity: 30
+  misspell:
+    # Correct spellings using locale preferences for US or UK.
+    # Default is to use a neutral variety of English.
+    # Setting locale to US will correct the British spelling of 'colour' to 'color'.
+    locale: US
+  unused:
+    # treat code as a program (not a library) and report unused exported identifiers; default is false.
+    # XXX: if you enable this setting, unused will report a lot of false-positives in text editors:
+    # if it's called for subdir of a project it can't find funcs usages. All text editor integrations
+    # with golangci-lint call it on a directory with the changed file.
+    check-exported: false
+  unparam:
+    # Inspect exported functions, default is false. Set to true if no external program/library imports your code.
+    # XXX: if you enable this setting, unparam will report a lot of false-positives in text editors:
+    # if it's called for subdir of a project it can't find external interfaces. All text editor integrations
+    # with golangci-lint call it on a directory with the changed file.
+    check-exported: false
+  nakedret:
+    # make an issue if func has more lines of code than this setting and it has naked returns; default is 30
+    max-func-lines: 30
+  prealloc:
+    # XXX: we don't recommend using this linter before doing performance profiling.
+    # For most programs usage of prealloc will be a premature optimization.
+    # Report preallocation suggestions only on simple loops that have no returns/breaks/continues/gotos in them.
+    # True by default.
+    simple: true
+    range-loops: true # Report preallocation suggestions on range loops, true by default
+    for-loops: true # Report preallocation suggestions on for loops, false by default
+  gocritic:
+    # Which checks should be enabled; can't be combined with 'disabled-checks'.
+    # See https://go-critic.github.io/overview#checks-overview.
+    # To check which checks are enabled run `GL_DEBUG=gocritic golangci-lint run`.
+    # By default, list of stable checks is used.
+    enabled-checks:
+      - nestingReduce
+      - unnamedResult
+      - ruleguard
+      - truncateCmp
+    # Enable multiple checks by tags, run `GL_DEBUG=gocritic golangci-lint` run to see all tags and checks.
+    # Empty list by default. See https://github.com/go-critic/go-critic#usage -> section "Tags".
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+      - experimental
+      - opinionated
+    settings: # settings passed to gocritic
+      rangeValCopy:
+        sizeThreshold: 32
+  gofmt:
+    # simplify code: gofmt with `-s` option, true by default
+    simplify: true
+  dupword:
+    # Keywords for detecting duplicate words.
+    # If this list is not empty, only the words defined in this list will be detected.
+    # Default: []
+    keywords:
+      - 'the'
+      - 'and'
+      - 'a'
+  gci:
+    # Section configuration to compare against.
+    # Section names are case-insensitive and may contain parameters in ().
+    # The default order of sections is `standard > default > custom > blank > dot`,
+    # If `custom-order` is `true`, it follows the order of `sections` option.
+    # Default: ["standard", "default"]
+    sections:
+      - standard # Standard section: captures all standard packages.
+      - default # Default section: contains all imports that could not be matched to another section type.
+      - prefix(github.com/BIwashi/xpipecd-xbar) # Custom section: groups all imports with the specified Prefix.
+    # Enable custom order of sections.
+    # If `true`, make the section order the same as the order of `sections`.
+    # Default: false
+    custom-order: true
+  gofumpt:
+    # Select the Go version to target.
+    # Default: "1.15"
+    # Deprecated: use the global `run.go` instead.
+    lang-version: '1.21'
+    # Module path which contains the source code being formatted.
+    # Default: ""
+    module-path: github.com/BIwashi/xpipecd-xbar
+    # Choose whether to use the extra rules.
+    # Default: false
+    extra-rules: true
+  gomnd:
+    ignored-numbers:
+      - '2'
+      - '30'
+linters:
+  enable:
+    - errcheck
+    - errorlint
+    - govet
+    - gocyclo
+    - misspell
+    - megacheck
+    - unused
+    - nakedret
+    - prealloc
+    - staticcheck
+    - gosimple
+    - gofmt
+    - durationcheck
+    - exportloopref
+    - forcetypeassert
+    - gci
+    - goconst
+    - gofumpt
+    - gomnd
+    - makezero
+    - nilerr
+    - nlreturn
+    - unconvert
+    - wastedassign
+    - nosprintfhostport
+    - loggercheck
+    - dupword
+    - contextcheck
+    - containedctx
+    - paralleltest
+    - tparallel
+    - usestdlibvars
+    - gosec
+    - stylecheck
+    - unparam
+  disable:
+    - errchkjson
+    - gosmopolitan # 純粋に不要
+    - scopelint   # deprecated
+    - deadcode    # deprecated
+    - structcheck # deprecated
+    - varcheck    # deprecated
+    - protogetter
+  enable-all: false
+  presets:
+    - bugs
+    - unused
+  fast: false
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+  # Excluding configuration per-path, per-linter, per-text and per-source
+  exclude-rules:
+    - text: "don't use an underscore in package name"
+      linters:
+        - golint
+    - text: 'Use of weak random number generator'
+      linters:
+        - gosec
+    - text: 'missing cases in switch of type'
+      linters:
+        - exhaustive
+    - path: _test\.go
+      linters:
+        - containedctx
+run:
+  timeout: 10m
+  skip-dirs:
+    - datastore/datastoresql
+    - mock
+    - service
+    - filestore
+    - model
+
+  allow-parallel-runners: true
