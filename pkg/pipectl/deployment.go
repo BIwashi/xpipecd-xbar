@@ -99,7 +99,7 @@ func (c *pipectl) makeDeploymentLink(deployment *model.Deployment) string {
 func makeStatusIcon(deployment *model.Deployment) string {
 	switch deployment.Status {
 	case model.DeploymentStatus_DEPLOYMENT_PENDING:
-		return ":pause_button:"
+		return ":heavy_exclamation_mark:"
 	case model.DeploymentStatus_DEPLOYMENT_RUNNING:
 		return ":arrows_counterclockwise:"
 	case model.DeploymentStatus_DEPLOYMENT_ROLLING_BACK:
