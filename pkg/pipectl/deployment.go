@@ -48,7 +48,7 @@ func (c *pipectl) listDeployments(ctx context.Context) error {
 		xbars = append(xbars,
 			xbar.Xbar{
 				Line: xbar.Line{
-					Title:    makeStatusIcon(d) + d.ApplicationName,
+					Title:    fmt.Sprintf("%s %s", makeStatusIcon(d), d.ApplicationName),
 					Href:     &l,
 					Dropdown: &tr,
 				},
