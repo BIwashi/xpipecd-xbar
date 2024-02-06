@@ -38,8 +38,9 @@ type pipectl struct {
 func NewCommand() *cobra.Command {
 	c := pipectl{
 		statuses: []string{
-			model.DeploymentStatus_DEPLOYMENT_PENDING.String(),
+			// model.DeploymentStatus_DEPLOYMENT_PENDING.String(),
 			model.DeploymentStatus_DEPLOYMENT_RUNNING.String(),
+			// model.DeploymentStatus_DEPLOYMENT_SUCCESS.String(),
 		},
 		limit:  50,
 		stdout: os.Stdout,

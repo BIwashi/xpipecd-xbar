@@ -60,13 +60,17 @@ func (c *pipectl) listDeployments(ctx context.Context) error {
 					},
 				},
 			},
-			xbar.Xbar{
-				Line: xbar.Line{
-					Title: makeStageStatus(d.Stages),
-				},
-			},
-			xbar.SeparateLine,
 		)
+
+		if stageStatus, ok := makeStageStatus(d.Stages); ok {
+			xbars = append(xbars,
+				xbar.Xbar{
+					Line: xbar.Line{
+						Title: stageStatus,
+					}},
+			)
+		}
+		xbars = append(xbars, xbar.SeparateLine)
 
 		switch d.Status {
 		case model.DeploymentStatus_DEPLOYMENT_PENDING:
@@ -83,6 +87,7 @@ func (c *pipectl) listDeployments(ctx context.Context) error {
 				TemplateImage: &pipecdIconBase64,
 			},
 		},
+		xbar.SeparateLine,
 	}, xbars...)
 
 	for _, x := range xbars {
@@ -115,7 +120,7 @@ func makeStatusIcon(deployment *model.Deployment) string {
 	}
 }
 
-func makeStageStatus(stages []*model.PipelineStage) string {
+func makeStageStatus(stages []*model.PipelineStage) (string, bool) {
 	var runningStage string
 	for _, stage := range stages {
 		if stage.Status == model.StageStatus_STAGE_RUNNING {
@@ -123,7 +128,11 @@ func makeStageStatus(stages []*model.PipelineStage) string {
 		}
 	}
 
-	return fmt.Sprintf("%s %s", makeStageStatusIcon(runningStage), runningStage)
+	if runningStage == "" {
+		return "", false
+	}
+
+	return fmt.Sprintf("%s %s", makeStageStatusIcon(runningStage), runningStage), true
 }
 
 // TODO: Add icon for each stage.
