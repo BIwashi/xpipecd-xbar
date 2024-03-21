@@ -1,6 +1,6 @@
 module github.com/BIwashi/xpipecd-xbar
 
-go 1.21.6
+go 1.22
 
 require (
 	github.com/cockroachdb/errors v1.11.1
