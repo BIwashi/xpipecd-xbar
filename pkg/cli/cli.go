@@ -100,6 +100,11 @@ func runWithContext(cmd *cobra.Command, signalCh <-chan os.Signal, runner Runner
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	go func() {
+		<-signalCh
+		cancel()
+	}()
+
 	if err := runner(ctx, input); err != nil {
 		return errors.Wrap(err, "run command")
 	}
