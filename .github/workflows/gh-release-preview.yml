@@ -1,0 +1,23 @@
+name: gh-release-preview
+
+on:
+  pull_request:
+    types: 
+      - opened
+      - synchronize
+    branches:
+      - main
+    paths:
+      - "**/RELEASE"
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: pipe-cd/actions-gh-release@v2.6.0
+        with:
+          release_file: "**/RELEASE"
+          token: ${{ secrets.GITHUB_TOKEN }}
