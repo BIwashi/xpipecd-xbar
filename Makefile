@@ -41,9 +41,11 @@ lint/cli:
 	golangci-lint run --fix -c .golangci-lint.yml ./...
 
 .PHONY: run/cli
-run/cli: ## Run cli ## make run/cli
+run/cli: ## Run cli ## make run/cli k=${PIPECD_API_KEY} h=pipecd.jp:443
+run/cli: k ?= "" # PIPECD_API_KEY
+run/cli: h ?= "pipecd.jp:443" # PIPECD_HOST
 run/cli:
-	go run ./cmd/main.go pipectl
+	go run ./cmd/main.go pipectl --api-key=${k} --host=${h}
 
 ##### HELP #####
 
