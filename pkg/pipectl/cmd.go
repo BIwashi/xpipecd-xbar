@@ -65,26 +65,33 @@ func NewCommand() *cobra.Command {
 }
 
 func (c *pipectl) run(ctx context.Context, input cli.Input) error {
-	// logger := input.Logger
-	// logger.Info("hello world")
+	logger := input.Logger
 
 	creds := rpcclient.NewPerRPCCredentials(c.apiKey, rpcauth.APIKeyCredentials, true)
-	tlsConfig := &tls.Config{}
+	tlsConfig := &tls.Config{
+		MinVersion: tls.VersionTLS12,
+	}
 	options := []rpcclient.DialOption{
-		// rpcclient.WithBlock(),
+		rpcclient.WithBlock(),
 		rpcclient.WithPerRPCCredentials(creds),
 		rpcclient.WithTransportCredentials(credentials.NewTLS(tlsConfig)),
 	}
 
 	client, err := api.NewClient(ctx, c.host, options...)
 	if err != nil {
-		return errors.Wrap(err, "failed to create api client")
+		cerr := errors.Wrap(err, "failed to create api client")
+		logger.Error("failed to create api client", cerr)
+
+		return cerr
 	}
 	c.a = client
 	defer c.a.Close()
 
 	if err := c.listDeployments(ctx); err != nil {
-		return errors.Wrap(err, "failed to list deployments")
+		cerr := errors.Wrap(err, "failed to list deployments")
+		logger.Error("failed to list deployments", cerr)
+
+		return cerr
 	}
 
 	return nil
