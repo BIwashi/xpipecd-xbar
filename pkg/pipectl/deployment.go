@@ -13,6 +13,9 @@ import (
 	"github.com/BIwashi/xpipecd-xbar/pkg/xbar"
 )
 
+//go:embed pipecd_base64.txt
+var pipecdIconBase64 string
+
 func (c *pipectl) listDeployments(ctx context.Context) error {
 	labels := map[string]string{}
 	for _, label := range c.labels {
@@ -43,7 +46,10 @@ func (c *pipectl) listDeployments(ctx context.Context) error {
 	)
 
 	for _, d := range resp.Deployments {
-		l := c.makeDeploymentLink(d)
+		var (
+			l  = c.makeDeploymentLink(d)
+			tr = true
+		)
 
 		xbars = append(xbars,
 			xbar.Xbar{
@@ -67,9 +73,11 @@ func (c *pipectl) listDeployments(ctx context.Context) error {
 				xbar.Xbar{
 					Line: xbar.Line{
 						Title: stageStatus,
-					}},
+					},
+				},
 			)
 		}
+
 		xbars = append(xbars, xbar.SeparateLine)
 
 		switch d.Status {
@@ -101,20 +109,35 @@ func (c *pipectl) makeDeploymentLink(deployment *model.Deployment) string {
 	return fmt.Sprintf("https://%s/deployments/%s/", c.host, deployment.Id)
 }
 
+const (
+	iconHeavyExclamationMark   = ":heavy_exclamation_mark:"  // ❗
+	iconArrowsCounterclockwise = ":arrows_counterclockwise:" // 🔄
+	iconArrowForward           = ":arrow_forward:"           // ▶️
+	iconRewind                 = ":rewind:"                  // ⏪
+	iconWhiteCheckMark         = ":white_check_mark:"        // ✅
+	iconX                      = ":x:"                       // ❌
+	iconNoEntry                = ":no_entry:"                // ⛔
+	iconHourglassFlowingSand   = ":hourglass_flowing_sand:"  // ⏳
+	iconCloud                  = ":cloud:"                   // ☁️
+	iconMag                    = ":mag:"                     // 🔍
+	iconBabyChick              = ":baby_chick:"              // 🐤
+	iconHand                   = ":hand:"                    // ✋
+)
+
 func makeStatusIcon(deployment *model.Deployment) string {
 	switch deployment.Status {
 	case model.DeploymentStatus_DEPLOYMENT_PENDING:
-		return ":heavy_exclamation_mark:"
+		return iconHeavyExclamationMark
 	case model.DeploymentStatus_DEPLOYMENT_RUNNING:
-		return ":arrows_counterclockwise:"
+		return iconArrowsCounterclockwise
 	case model.DeploymentStatus_DEPLOYMENT_ROLLING_BACK:
-		return ":rewind:"
+		return iconRewind
 	case model.DeploymentStatus_DEPLOYMENT_SUCCESS:
-		return ":white_check_mark:"
+		return iconWhiteCheckMark
 	case model.DeploymentStatus_DEPLOYMENT_FAILURE:
-		return ":x:"
+		return iconX
 	case model.DeploymentStatus_DEPLOYMENT_CANCELLED:
-		return ":no_entry:"
+		return iconNoEntry
 	default:
 		return ""
 	}
@@ -135,44 +158,35 @@ func makeStageStatus(stages []*model.PipelineStage) (string, bool) {
 	return fmt.Sprintf("%s %s", makeStageStatusIcon(runningStage), runningStage), true
 }
 
-// TODO: Add icon for each stage.
 func makeStageStatusIcon(runningStage string) string {
 	switch runningStage {
 	case string(model.StageWait):
-		return ""
+		return iconHourglassFlowingSand
 	case string(model.StageWaitApproval):
-		return ":hand:"
+		return iconHand
 	case string(model.StageAnalysis):
-		return ""
+		return iconMag
 	case string(model.StageTerraformSync):
-		return ":cloud:"
+		return iconArrowsCounterclockwise
 	case string(model.StageTerraformPlan):
-		return ":cloud:"
+		return iconArrowForward
 	case string(model.StageTerraformApply):
-		return ":cloud:"
+		return iconArrowForward
 	case string(model.StageECSSync):
-		return ":cloud:"
+		return iconArrowsCounterclockwise
 	case string(model.StageECSCanaryRollout):
-		return ":cloud:"
+		return iconBabyChick
 	case string(model.StageECSTrafficRouting):
-		return ":cloud:"
+		return iconBabyChick
 	case string(model.StageECSCanaryClean):
-		return ":cloud:"
+		return iconBabyChick
 	case string(model.StageCustomSync):
-		return ":cloud:"
+		return iconArrowsCounterclockwise
 	case string(model.StageRollback):
-		return ":rewind:"
+		return iconRewind
 	case string(model.StageCustomSyncRollback):
-		return ":rewind:"
+		return iconArrowsCounterclockwise
 	default:
 		return ""
 	}
 }
-
-//go:embed pipecd_base64.txt
-var pipecdIconBase64 string
-
-var (
-	tr = true  //nolint:unused
-	fl = false //nolint:unused
-)
