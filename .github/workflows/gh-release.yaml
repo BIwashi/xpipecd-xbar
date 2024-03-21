@@ -7,11 +7,13 @@ on:
     paths:
       - "**/RELEASE"
   pull_request:
-    types: [opened, synchronize]
+    types:
+      - opened
+      - synchronize
     branches:
       - main
     paths:
-      - '**/RELEASE'
+      - "**/RELEASE"
   workflow_dispatch:
 
 jobs:
