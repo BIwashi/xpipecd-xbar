@@ -110,7 +110,8 @@ linters-settings:
   gomnd:
     ignored-numbers:
       - '2'
-      - '30'
+      - '13'
+      - '50'
 linters:
   enable:
     - errcheck
