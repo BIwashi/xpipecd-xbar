@@ -1,0 +1,53 @@
+name: gh-release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**/RELEASE"
+  workflow_dispatch:
+
+jobs:
+  gh-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pipe-cd/actions-gh-release@v2.6.0
+        with:
+          release_file: "**/RELEASE"
+          token: ${{ secrets.GITHUB_TOKEN }}
+  upload-artifacts:
+    needs: gh-release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os-arch:
+          - { os: "darwin", arch: "amd64" }
+          - { os: "darwin", arch: "arm64" }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build CLI for ${{ matrix.os-arch.os }}/${{ matrix.os-arch.arch }}
+        run: make build/cli BUILD_OS=${{ matrix.os-arch.os }} BUILD_ARCH=${{ matrix.os-arch.arch }}
+      - name: Create ZIP Archive for ${{ matrix.os-arch.os }}/${{ matrix.os-arch.arch }}
+        run: zip -r xpipecd-xbar-${{ github.sha }}-${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}.zip ./.artifacts/* xpipecd-xbar.sh
+      - name: Get upload URL
+        id: get_upload_url
+        run: |
+          UPLOAD_URL=$(gh release view --json uploadUrl -q ".uploadUrl")
+          echo "::set-output name=upload_url::$UPLOAD_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload ZIP Archive for ${{ matrix.os-arch.os }}/${{ matrix.os-arch.arch }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_upload_url.outputs.upload_url }}
+          asset_path: ./xpipecd-xbar-${{ github.sha }}-${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}.zip
+          asset_name: xpipecd-xbar-${{ github.sha }}-${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}.zip
+          asset_content_type: application/zip
