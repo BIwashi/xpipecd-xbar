@@ -50,7 +50,7 @@ jobs:
         with:
           golangci_lint_version: v1.56.2
           golangci_lint_flags: "-c .golangci-lint.yml ./..."
-          workdir: /
+          workdir: ./
           reporter: github-pr-review
           fail_on_error: true
       - name: goimport
