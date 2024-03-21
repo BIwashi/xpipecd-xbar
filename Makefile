@@ -37,7 +37,7 @@ lint/cli:
 		echo 'strictgoimports is not exists'; \
 		go install github.com/momotaro98/strictgoimports/cmd/strictgoimports@latest; \
     fi
-	strictgoimports -w -exclude "*.mock.go,*.pb.go" -local "github.com/BIwashi/xpipecd-xbar" .
+	strictgoimports -w -local "github.com/BIwashi/xpipecd-xbar" .
 	golangci-lint run --fix -c .golangci-lint.yml ./...
 
 .PHONY: run/cli

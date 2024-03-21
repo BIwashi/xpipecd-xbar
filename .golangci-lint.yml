@@ -27,11 +27,6 @@ linters-settings:
   gocyclo:
     # minimal code complexity to report, 30 by default (but we recommend 10-20)
     min-complexity: 30
-  misspell:
-    # Correct spellings using locale preferences for US or UK.
-    # Default is to use a neutral variety of English.
-    # Setting locale to US will correct the British spelling of 'colour' to 'color'.
-    locale: US
   unused:
     # treat code as a program (not a library) and report unused exported identifiers; default is false.
     # XXX: if you enable this setting, unused will report a lot of false-positives in text editors:
@@ -115,14 +110,14 @@ linters-settings:
   gomnd:
     ignored-numbers:
       - '2'
-      - '30'
+      - '13'
+      - '50'
 linters:
   enable:
     - errcheck
     - errorlint
     - govet
     - gocyclo
-    - misspell
     - megacheck
     - unused
     - nakedret
@@ -155,7 +150,8 @@ linters:
     - unparam
   disable:
     - errchkjson
-    - gosmopolitan # 純粋に不要
+    - misspell
+    - gosmopolitan
     - scopelint   # deprecated
     - deadcode    # deprecated
     - structcheck # deprecated

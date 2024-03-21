@@ -1,0 +1,28 @@
+name: presubmit
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  assign-pr-author:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Assign pull request author
+      uses: technote-space/assign-author@v1
+
+  merge-gatekeeper:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Run Merge Gatekeeper
+        uses: upsidr/merge-gatekeeper@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          self: merge-gatekeeper

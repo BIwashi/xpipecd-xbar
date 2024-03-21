@@ -1,0 +1,79 @@
+name: backend
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    branches:
+      - main
+    paths:
+      - 'pkg/**'
+      - 'cmd/**'
+      - '.github/workflows/backend.yaml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'pkg/**'
+      - 'cmd/**'
+      - '.github/workflows/backend.yaml'
+  workflow_dispatch:
+
+jobs:
+  go-lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          sparse-checkout: |
+            .
+            ./pkg
+            ./cmd
+            ./.github
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: false # https://github.com/golangci/golangci-lint-action/issues/23
+          cache-dependency-path: go.sum
+      - uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+      - name: golangci-lint
+        uses: reviewdog/action-golangci-lint@v2
+        with:
+          golangci_lint_version: v1.56.2
+          golangci_lint_flags: "-c .golangci-lint.yml ./..."
+          workdir: ./
+          reporter: github-pr-review
+          fail_on_error: true
+      - name: goimport
+        run: |
+          go install github.com/momotaro98/strictgoimports/cmd/strictgoimports@latest
+          strictgoimports -w -local "github.com/BIwashi/xpipecd-xbar" .
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check diff
+        id: diff
+        run: |
+          git add -N .
+          git diff --name-only --exit-code
+  go-vulncheck:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 10
+    env:
+      GOWORK: off
+    steps:
+      - uses: golang/govulncheck-action@v1
+        with:
+          go-version-file: go.mod
+          go-package: ./...
+          work-dir: ./
