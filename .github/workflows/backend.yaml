@@ -56,6 +56,7 @@ jobs:
       - name: goimport
         run: |
           go install github.com/momotaro98/strictgoimports/cmd/strictgoimports@latest
+          strictgoimports -w -local "github.com/BIwashi/xpipecd-xbar/cmd" ./cmd --local "github.com/BIwashi/xpipecd-xbar/pkg" ./pkg 
           strictgoimports -w -d ./
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
