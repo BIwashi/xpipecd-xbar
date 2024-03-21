@@ -17,16 +17,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Create temporary access token by GitHub App
-        id: app-token
-        uses: actions/create-github-app-token@v1
-        with:
-          app-id: ${{ secrets.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+      # - name: Create temporary access token by GitHub App
+      #   id: app-token
+      #   uses: actions/create-github-app-token@v1
+      #   with:
+      #     app-id: ${{ secrets.APP_ID }}
+      #     private-key: ${{ secrets.APP_PRIVATE_KEY }}
       - uses: ./.github/actions/gh-release
         with:
           release_file: 'release/RELEASE'
-          token: ${{ steps.app-token.outputs.token }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # token: ${{ steps.app-token.outputs.token }}
       # - uses: pipe-cd/actions-gh-release@v2.6.0
       #   with:
       #     release_file: "**/RELEASE"
