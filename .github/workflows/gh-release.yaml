@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
       - uses: pipe-cd/actions-gh-release@v2.6.0
         with:
-          release_file: "**/RELEASE"
+          release_file: "release/RELEASE"
           token: ${{ secrets.GITHUB_TOKEN }}
   upload-artifacts:
     needs: gh-release
