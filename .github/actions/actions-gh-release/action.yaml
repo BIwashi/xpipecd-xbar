@@ -1,0 +1,29 @@
+name: 'Create GitHub Release'
+description: 'Create new releases when any specified RELEASE files were modified.'
+author: 'PipeCD team'
+branding:
+  icon: 'tag'
+  color: 'green'
+
+inputs:
+  release_file:
+    description: 'The path to the RELEASE file or pattern to match one or multiple RELEASE files.'
+    required: true
+  token:
+    description: 'The GITHUB_TOKEN secret.'
+    required: true
+  output_releases_file_path:
+    description: 'The path to output the list of releases formatted in JSON.'
+    required: false
+
+outputs:
+  releases:
+    description: 'The list of releases formatted in JSON.'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - release-file=${{ inputs.release_file }}
+    - token=${{ inputs.token }}
+    - output-releases-file-path=${{ inputs.output_releases_file_path }}
