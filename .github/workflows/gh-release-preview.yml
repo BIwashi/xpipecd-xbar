@@ -13,6 +13,9 @@ on:
 jobs:
   gh-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@v3
         with:
