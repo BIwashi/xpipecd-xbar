@@ -39,6 +39,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache: true
+          cache-dependency-path: go.sum
       - name: Build CLI for ${{ matrix.os-arch.os }}/${{ matrix.os-arch.arch }}
         run: make build/cli BUILD_OS=${{ matrix.os-arch.os }} BUILD_ARCH=${{ matrix.os-arch.arch }}
       - name: Create ZIP Archive for ${{ matrix.os-arch.os }}/${{ matrix.os-arch.arch }}
