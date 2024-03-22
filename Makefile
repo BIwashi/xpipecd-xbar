@@ -29,6 +29,14 @@ setup/cli: ## Setup cli ## make setup/cli
 	ln -sf $(CURDIR)/.artifacts/xpipecd-xbar$(BIN_SUFFIX) $(HOME)/Library/Application\ Support/xbar/plugins/.artifacts/xpipecd-xbar
 	ln -sf $(CURDIR)/xpipecd-xbar.sh $(HOME)/Library/Application\ Support/xbar/plugins/xpipecd-xbar.$(t).sh
 
+.PHONY: setup/artifacts
+setup/cli: t ?= 30s
+setup/cli: ## Setup cli ## make setup/cli
+	mkdir -p $(HOME)/Library/Application\ Support/xbar/plugins
+	mkdir -p $(HOME)/Library/Application\ Support/xbar/plugins/.artifacts
+	ln -sf $(CURDIR)/.artifacts/xpipecd-xbar* $(HOME)/Library/Application\ Support/xbar/plugins/.artifacts/
+	ln -sf $(CURDIR)/xpipecd-xbar.sh $(HOME)/Library/Application\ Support/xbar/plugins/xpipecd-xbar.$(t).sh
+
 .PHONY: lint/cli
 lint/cli: ## Format and lint cli code ## make lint/cli
 lint/cli: STRICT_GO_IMPORTS_EXISTS = $(shell which strictgoimports)
