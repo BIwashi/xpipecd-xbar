@@ -30,6 +30,8 @@ jobs:
         with:
           release_file: "**/RELEASE"
           token: ${{ steps.app-token.outputs.token }}
+
+
           # token: ${{ secrets.GITHUB_TOKEN }}
 
   # preview:
