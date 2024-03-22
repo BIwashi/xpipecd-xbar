@@ -30,8 +30,8 @@ setup/cli: ## Setup cli ## make setup/cli
 	ln -sf $(CURDIR)/xpipecd-xbar.sh $(HOME)/Library/Application\ Support/xbar/plugins/xpipecd-xbar.$(t).sh
 
 .PHONY: setup/artifacts
-setup/cli: t ?= 30s
-setup/cli: ## Setup cli ## make setup/cli
+setup/artifacts: t ?= 30s
+setup/artifacts: ## Add symlink to artifacts and shell script ## make setup/artifacts
 	mkdir -p $(HOME)/Library/Application\ Support/xbar/plugins
 	mkdir -p $(HOME)/Library/Application\ Support/xbar/plugins/.artifacts
 	ln -sf $(CURDIR)/.artifacts/xpipecd-xbar* $(HOME)/Library/Application\ Support/xbar/plugins/.artifacts/
