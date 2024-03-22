@@ -47,7 +47,7 @@ jobs:
       - name: Build CLI for ${{ matrix.os-arch.os }}/${{ matrix.os-arch.arch }}
         run: make build/cli BUILD_OS=${{ matrix.os-arch.os }} BUILD_ARCH=${{ matrix.os-arch.arch }}
       - name: Create ZIP Archive for ${{ matrix.os-arch.os }}/${{ matrix.os-arch.arch }}
-        run: zip -r xpipecd-xbar-${{ github.sha }}-${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}.zip ./.artifacts/* xpipecd-xbar.sh
+        run: zip -r xpipecd-xbar-${{ github.sha }}-${{ matrix.os-arch.os }}-${{ matrix.os-arch.arch }}.zip ./.artifacts/* xpipecd-xbar.sh Makefile
       - name: Get upload URL
         id: get_upload_url
         run: |
