@@ -75,6 +75,11 @@ func (c *pipectl) listDeployments(ctx context.Context) error {
 						Title: stageStatus,
 					},
 				},
+				xbar.Xbar{
+					Line: xbar.Line{
+						Title: fmt.Sprintf("%s %s", iconBustInSilhouette, d.Trigger.Commit.Author),
+					},
+				},
 			)
 		}
 
@@ -122,6 +127,7 @@ const (
 	iconMag                    = ":mag:"                     // 🔍
 	iconBabyChick              = ":baby_chick:"              // 🐤
 	iconHand                   = ":hand:"                    // ✋
+	iconBustInSilhouette       = ":bust_in_silhouette:"      // 👤
 )
 
 func makeStatusIcon(deployment *model.Deployment) string {
