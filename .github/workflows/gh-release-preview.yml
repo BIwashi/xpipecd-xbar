@@ -31,16 +31,3 @@ jobs:
           release_file: "**/RELEASE"
           token: ${{ steps.app-token.outputs.token }}
 
-
-          # token: ${{ secrets.GITHUB_TOKEN }}
-
-  # preview:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #     - uses: pipe-cd/actions-gh-release@v2.6.0
-  #       with:
-  #         release_file: "**/RELEASE"
-  #         token: ${{ secrets.GITHUB_TOKEN }}
