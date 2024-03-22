@@ -11,24 +11,24 @@ on:
       - "**/RELEASE"
 
 jobs:
-  preview:
+  gh-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      # - name: Create temporary access token by GitHub App
-      #   id: app-token
-      #   uses: actions/create-github-app-token@v1
-      #   with:
-      #     app-id: ${{ secrets.APP_ID }}
-      #     private-key: ${{ secrets.APP_PRIVATE_KEY }}
-      - uses: ./.github/actions/gh-release
+      - uses: pipe-cd/actions-gh-release@v2.6.0
         with:
-          release_file: 'release/RELEASE'
+          release_file: "**/RELEASE"
           token: ${{ secrets.GITHUB_TOKEN }}
-          # token: ${{ steps.app-token.outputs.token }}
-      # - uses: pipe-cd/actions-gh-release@v2.6.0
-      #   with:
-      #     release_file: "**/RELEASE"
-      #     token: ${{ secrets.GITHUB_TOKEN }}
+
+  # preview:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: pipe-cd/actions-gh-release@v2.6.0
+  #       with:
+  #         release_file: "**/RELEASE"
+  #         token: ${{ secrets.GITHUB_TOKEN }}
