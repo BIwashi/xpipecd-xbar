@@ -4,6 +4,7 @@ Using [xbar](https://github.com/matryer/xbar), an OSS that allows displaying any
 
 [matryer/xbar: Put the output from any script or program into your macOS Menu Bar (the BitBar reboot)](https://github.com/matryer/xbar)
 
+![bar](img/image_0.png)
 
 # How to setup
 
