@@ -2,10 +2,10 @@ name: gh-release
 
 on:
   push:
-    tags:
-    - 'v*'
-  #   paths:
-  #     - "**/RELEASE"
+    branches:
+      - main
+    paths:
+      - "**/RELEASE"
   # pull_request:
   #   types:
   #     - opened
